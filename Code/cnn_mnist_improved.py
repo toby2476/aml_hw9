@@ -1,4 +1,8 @@
-#Design CNN with 2 convolutional layers, 2 pooling layers, and 2 fully connected layers with 1024 and 10 neurons
+#Improve CNN by changing architecture
+
+#CITATIONS
+#used code from the tensorboard tutorial: https://www.tensorflow.org/programmers_guide/summaries_and_tensorboard
+#and the tensorflow mnist tutorial: https://www.tensorflow.org/tutorials/layers
 
 from __future__ import absolute_import
 from __future__ import division
@@ -13,7 +17,7 @@ tf.logging.set_verbosity(tf.logging.INFO)
 
 rate = 1e-3
 batch_size = 100 
-rounds = 2000
+rounds = 2001
 dense_layer_neurons = 1024
 
 #Setup placeholders and reshape data
@@ -26,22 +30,30 @@ x_image = tf.reshape(x,[-1,28,28,1])
 
 conv1 = tf.layers.conv2d(
       inputs=x_image,
-      filters=32,
+      filters=16,
       kernel_size=[5, 5],
       padding="same",
       activation=tf.nn.relu)
 
-pool1 = tf.nn.max_pool(conv1, ksize=[1,2,2,1], strides=[1,2,2,1], padding="SAME")
+#pool1 = tf.nn.max_pool(conv1, ksize=[1,2,2,1], strides=[1,2,2,1], padding="SAME")
 
 conv2 = tf.layers.conv2d(
-      inputs=pool1,
-      filters=64,
+      inputs=conv1,
+      filters=16,
       kernel_size=[5, 5],
       padding="same",
       activation=tf.nn.relu)
 
-pool2 = tf.nn.max_pool(conv2, ksize=[1,2,2,1], strides=[1,2,2,1], padding="SAME")
-flattened = tf.reshape(pool2, [-1,7*7*64])
+#pool2 = tf.nn.max_pool(conv2, ksize=[1,2,2,1], strides=[1,2,2,1], padding="SAME")
+
+conv3 = tf.layers.conv2d(
+      inputs=conv1,
+      filters=16,
+      kernel_size=[5, 5],
+      padding="same",
+      activation=tf.nn.relu)
+
+flattened = tf.reshape(conv3, [-1,28*28*16])
 
 fc1 = tf.layers.dense(inputs=flattened, units=dense_layer_neurons, activation=tf.nn.relu)
 dropout = tf.layers.dropout(inputs=fc1, rate=0.4)
@@ -76,7 +88,7 @@ train_data = mnist.train.images
 train_labels = np.array(mnist.train.labels, dtype=np.int32)
 
 #Setup Filewriter
-writer = tf.summary.FileWriter("./test_6")
+writer = tf.summary.FileWriter("./Improved")
 merged_summary = tf.summary.merge_all()	
 
 for i in range(rounds):

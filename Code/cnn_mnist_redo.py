@@ -1,5 +1,9 @@
 #Design CNN with 2 convolutional layers, 2 pooling layers, and 2 fully connected layers with 1024 and 10 neurons
 
+#CITATIONS
+#used code from the tensorboard tutorial: https://www.tensorflow.org/programmers_guide/summaries_and_tensorboard
+#and the tensorflow mnist tutorial: https://www.tensorflow.org/tutorials/layers
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -13,7 +17,7 @@ tf.logging.set_verbosity(tf.logging.INFO)
 
 rate = 1e-3
 batch_size = 100 
-rounds = 2000
+rounds = 2001
 dense_layer_neurons = 1024
 
 #Setup placeholders and reshape data
@@ -55,7 +59,7 @@ with tf.name_scope("cross_entropy"):
 tf.summary.scalar('cross_entropy',cross_entropy)
 
 with tf.name_scope("train"):
-	train_step = tf.train.GradientDescentOptimizer(learning_rate=rate).minimize(cross_entropy) #AdamOptimizer to train network
+	train_step = tf.train.GradientDescentOptimizer(learning_rate=rate).minimize(cross_entropy) 
 
 
 with tf.name_scope("accuracy"):
@@ -76,7 +80,7 @@ train_data = mnist.train.images
 train_labels = np.array(mnist.train.labels, dtype=np.int32)
 
 #Setup Filewriter
-writer = tf.summary.FileWriter("./test_6")
+writer = tf.summary.FileWriter("./Baseline")
 merged_summary = tf.summary.merge_all()	
 
 for i in range(rounds):
